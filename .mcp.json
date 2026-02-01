@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "raysurfer": {
+      "command": "npx",
+      "args": ["-y", "raysurfer-code-caching-mcp"],
+      "env": {
+        "RAYSURFER_API_KEY": "${RAYSURFER_API_KEY}"
+      }
+    }
+  }
+}

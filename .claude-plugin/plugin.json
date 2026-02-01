@@ -1,0 +1,9 @@
+{
+  "name": "raysurfer-code-caching-tool",
+  "description": "Raysurfer code caching for Claude Code - search, cache, and reuse code from prior executions",
+  "version": "0.1.0",
+  "author": {
+    "name": "Raysurfer",
+    "url": "https://raysurfer.com"
+  }
+}
