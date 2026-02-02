@@ -119,44 +119,24 @@ Only upload code that executed successfully. Set `auto_vote` to `true` to automa
 
 When `$ARGUMENTS` is provided, use it as: `$ARGUMENTS`
 
-## Runnable Examples
+## Runnable Scripts
 
-These scripts can be run directly with `bash` once `RAYSURFER_API_KEY` is set.
+Ready-to-run scripts are in `${CLAUDE_PLUGIN_ROOT}/skills/raysurfer/`. Requires `RAYSURFER_API_KEY` to be set.
 
-### Search the cache
+### Search
 
-```bash
-#!/usr/bin/env bash
-# Search Raysurfer cache for code matching a task description.
-# Usage: bash search.sh "your task description"
-
-TASK="${1:-Parse a CSV file and generate a bar chart}"
-
-RESPONSE=$(curl -s -X POST https://api.raysurfer.com/api/retrieve/search \
-  -H "Authorization: Bearer $RAYSURFER_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d "{\"task\": \"$TASK\", \"top_k\": 5, \"min_verdict_score\": 0.3}")
-
-echo "$RESPONSE" | python3 -m json.tool 2>/dev/null || echo "$RESPONSE"
+```
+python search.py "Parse a CSV and plot a chart"
+bun search.ts "Parse a CSV and plot a chart"
+bash search.sh "Parse a CSV and plot a chart"
 ```
 
-### Upload code to the cache
+### Upload
 
-```bash
-#!/usr/bin/env bash
-# Upload a file to Raysurfer cache after successful execution.
-# Usage: bash upload.sh "task description" path/to/file.py
-
-TASK="${1:?Usage: upload.sh <task> <file>}"
-FILE="${2:?Usage: upload.sh <task> <file>}"
-CONTENT=$(cat "$FILE" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))")
-
-RESPONSE=$(curl -s -X POST https://api.raysurfer.com/api/store/execution-result \
-  -H "Authorization: Bearer $RAYSURFER_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d "{\"task\": \"$TASK\", \"files_written\": [{\"path\": \"$(basename "$FILE")\", \"content\": $CONTENT}], \"succeeded\": true, \"auto_vote\": true}")
-
-echo "$RESPONSE" | python3 -m json.tool 2>/dev/null || echo "$RESPONSE"
+```
+python upload.py "Generate a bar chart" chart.py
+bun upload.ts "Generate a bar chart" chart.py
+bash upload.sh "Generate a bar chart" chart.py
 ```
 
 ## Guidelines
