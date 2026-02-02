@@ -119,6 +119,46 @@ Only upload code that executed successfully. Set `auto_vote` to `true` to automa
 
 When `$ARGUMENTS` is provided, use it as: `$ARGUMENTS`
 
+## Runnable Examples
+
+These scripts can be run directly with `bash` once `RAYSURFER_API_KEY` is set.
+
+### Search the cache
+
+```bash
+#!/usr/bin/env bash
+# Search Raysurfer cache for code matching a task description.
+# Usage: bash search.sh "your task description"
+
+TASK="${1:-Parse a CSV file and generate a bar chart}"
+
+RESPONSE=$(curl -s -X POST https://api.raysurfer.com/api/retrieve/search \
+  -H "Authorization: Bearer $RAYSURFER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{\"task\": \"$TASK\", \"top_k\": 5, \"min_verdict_score\": 0.3}")
+
+echo "$RESPONSE" | python3 -m json.tool 2>/dev/null || echo "$RESPONSE"
+```
+
+### Upload code to the cache
+
+```bash
+#!/usr/bin/env bash
+# Upload a file to Raysurfer cache after successful execution.
+# Usage: bash upload.sh "task description" path/to/file.py
+
+TASK="${1:?Usage: upload.sh <task> <file>}"
+FILE="${2:?Usage: upload.sh <task> <file>}"
+CONTENT=$(cat "$FILE" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read()))")
+
+RESPONSE=$(curl -s -X POST https://api.raysurfer.com/api/store/execution-result \
+  -H "Authorization: Bearer $RAYSURFER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{\"task\": \"$TASK\", \"files_written\": [{\"path\": \"$(basename "$FILE")\", \"content\": $CONTENT}], \"succeeded\": true, \"auto_vote\": true}")
+
+echo "$RESPONSE" | python3 -m json.tool 2>/dev/null || echo "$RESPONSE"
+```
+
 ## Guidelines
 
 - Always verify `RAYSURFER_API_KEY` is set before making API calls. If unset, inform the user and skip cache operations.
