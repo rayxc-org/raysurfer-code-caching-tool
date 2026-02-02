@@ -6,4 +6,4 @@ CONTENT=$(cat "$FILE" | python3 -c "import sys,json; print(json.dumps(sys.stdin.
 curl -s -X POST https://api.raysurfer.com/api/store/execution-result \
   -H "Authorization: Bearer $RAYSURFER_API_KEY" \
   -H "Content-Type: application/json" \
-  -d "{\"task\": \"$TASK\", \"files_written\": [{\"path\": \"$(basename "$FILE")\", \"content\": $CONTENT}], \"succeeded\": true, \"auto_vote\": true}" | python3 -m json.tool 2>/dev/null
+  -d "{\"task\": \"$TASK\", \"file_written\": {\"path\": \"$(basename "$FILE")\", \"content\": $CONTENT}, \"succeeded\": true, \"auto_vote\": true}" | python3 -m json.tool 2>/dev/null

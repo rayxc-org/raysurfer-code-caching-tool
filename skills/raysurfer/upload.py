@@ -8,7 +8,7 @@ req = urllib.request.Request(
     "https://api.raysurfer.com/api/store/execution-result",
     data=json.dumps({
         "task": task,
-        "files_written": [{"path": os.path.basename(filepath), "content": content}],
+        "file_written": {"path": os.path.basename(filepath), "content": content},
         "succeeded": True,
         "auto_vote": True,
     }).encode(),

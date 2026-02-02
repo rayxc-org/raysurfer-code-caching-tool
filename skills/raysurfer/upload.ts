@@ -8,6 +8,6 @@ const content = readFileSync(filepath, "utf-8");
 const resp = await fetch("https://api.raysurfer.com/api/store/execution-result", {
   method: "POST",
   headers: { Authorization: `Bearer ${process.env.RAYSURFER_API_KEY}`, "Content-Type": "application/json" },
-  body: JSON.stringify({ task, files_written: [{ path: basename(filepath), content }], succeeded: true, auto_vote: true }),
+  body: JSON.stringify({ task, file_written: { path: basename(filepath), content }, succeeded: true, auto_vote: true }),
 });
 console.log(JSON.stringify(await resp.json(), null, 2));
